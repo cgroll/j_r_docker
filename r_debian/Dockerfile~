@@ -1,0 +1,13 @@
+FROM rocker-org/hadleyverse
+
+MAINTAINER "Christian Groll" groll.christian.edu@gmail.com
+
+RUN install2.r --error --deps TRUE \
+    devtools \
+    dplyr \
+    ggplot2 \
+    httr \ 
+    knitr \
+    Rcpp \
+    reshape2 \
+    rmarkdown \
