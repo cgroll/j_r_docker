@@ -120,25 +120,21 @@ For source file editing:
 - run RStudio server
 - 
 
-build debian image
-------------------
+### build debian image
+
 
 ````
 docker build -t jfinmetrix/rfinm_deb .
 ````
 
-run with emacs
---------------
-
-run RStudio
------------
+### run RStudio
 
 ````
 docker run -d -p 8787:8787 jfinmetrix/rfinm_deb rstudiostart
 ````
 
-run console with graphics windows
----------------------------------
+### run console with graphics windows
+
 
 ````
 docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix --name="rfinm_deb" jfinmetrix/rfinm_deb bash
@@ -150,8 +146,8 @@ With emacs:
 - M-x ess-remote
 
 
-run terminal in image
----------------------
+### run terminal in image
+
 
 ````
 docker run --rm -it jfinmetrix/rfinm_deb bash
@@ -169,18 +165,6 @@ Source file editing:
 
 docker
 ======
-
-
-
-This is a docker that let's you easily access pre-configured Julia and
-R computing environments. The following access points are provided:
-
-For source file editing:
-- RStudio
-- R terminal to connect for emacs remote ESS session
-
-Note: so far, I did not manage to set up a nice interface to edit
-Julia source files.
 
 
 - install Julia
