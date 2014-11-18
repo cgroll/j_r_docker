@@ -99,8 +99,8 @@ Beaker
 docker run -p 8800:8800 -t beakernotebook/beaker
 ````
 
-R
-====
+R Debian
+========
 
 Rocker images are built on Debian, so that they probably should be
 ported to Ubuntu in order to make them work with Julia, IPython and
@@ -112,25 +112,20 @@ In my case, this amounts to loading the hadleyverse image, which
 already builds upon the [rstudio
 image](https://github.com/rocker-org/hadleyverse/blob/master/Dockerfile).
 I then only need to customize the installed packages to comprise the
-ones that I need.
-
-rfinmetrix_debian
-
-For source file editing:
-- run RStudio server
-- 
+ones that I need - the respective Dockerfile is added in the r_debian
+subdirectory. 
 
 ##### build debian image
 
 
 ````
-docker build -t jfinmetrix/rfinm_deb .
+docker build -t juliafinmetrix/rfinm_deb .
 ````
 
 ##### run RStudio
 
 ````
-docker run -d -p 8787:8787 jfinmetrix/rfinm_deb rstudiostart
+docker run -d -p 8787:8787 juliafinmetrix/rfinm_deb rstudiostart
 ````
 
 ##### run console with graphics windows
@@ -139,21 +134,32 @@ With emacs:
 - start shell in emacs
 - start container:
 ````
-docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix --name="rfinm_deb" jfinmetrix/rfinm_deb bash
+docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix --name="rfinm_deb" juliafinmetrix/rfinm_deb bash
 ````
 or with home directory mounted:
 ````
-docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix  -v ./:/home/docker/ --name="rfinm_deb" jfinmetrix/rfinm_deb bash
+docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix  -v ./:/home/docker/ --name="rfinm_deb" juliafinmetrix/rfinm_deb bash
 ````
 - M-x ess-remote
 
 
-##### run terminal in image
+##### run terminal within container
 
 ````
-docker run --rm -it jfinmetrix/rfinm_deb bash
+docker run --rm -it juliafinmetrix/rfinm_deb bash
 ````
 
+R Ubuntu 
+=============
+
+##### build commands
+
+````
+docker build -t juliafinmetrix/rbase_ubuntu .
+docker build -t juliafinmetrix/rstudio_ubuntu .
+docker build -t juliafinmetrix/rhadley_ubuntu .
+docker build -t juliafinmetrix/rfinm_ub .
+````
 
 Julia
 =====
@@ -163,57 +169,35 @@ Source file editing:
 - directly working in terminal: 
   - using Winston throws error if X11 forwarding is not activated
 
+Beaker
+======
+````
+docker build -t juliafinmetrix/beaker_ubuntu .
+docker build -t juliafinmetrix/beaker .
+````
+
 
 docker
 ======
 
-
-- install Julia
-- install additional packages for Julia and R
-- install IPython + required python magic packages
-- set up IJulia
-- install beaker
-
-Access:
-R through RStudio:
-````R
-# detached mode
-# publish container's port to host
-docker run -d -p 8787:8787 jfinmetrix/base_r rstudiostart
+##### enable docker without sudo
+````
+sudo groupadd docker
+sudo gpasswd -a ${USER} docker
 ````
 
-build command
-=============
+##### File ownership
+by default, files within docker are owned by root?!
 
-docker build -t jfinmetrix/rbase_ubuntu .
-docker build -t jfinmetrix/rstudio_ubuntu .
-docker build -t jfinmetrix/rhadley_ubuntu .
-docker build -t jfinmetrix/beaker_ubuntu .
-
-
-docker run -d -p 8787:8787 jfinmetrix/rhadley_ubuntu rstudiostart
-docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix --name="rfinm" jfinmetrix/rhadley_ubuntu bash
-
-docker build -t jfinmetrix/rfinm .
-docker build -t jfinmetrix/beaker .
-
-
-run commands
-============
-
-RStudio: 
-docker run -d -p 8787:8787 jfinmetrix/rfinm rstudiostart
-
-R console:
-docker run --rm -it jfinmetrix/rfinm bash
-
-R console with graphics:
-docker run -it --rm -e DISPLAY=$DISPLAY \
--u docker \
--v /tmp/.X11-unix:/tmp/.X11-unix \
---name="rfinm" jfinmetrix/rfinm bash
-
-docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix --name="rfinm" jfinmetrix/rfinm bash
-
-Remove all containers:
+##### Remove containers
+````
 docker rm `docker ps --no-trunc -aq`
+````
+
+##### upload image
+````
+docker login
+docker push juliafinmetrix/rfinm_deb
+````
+
+
