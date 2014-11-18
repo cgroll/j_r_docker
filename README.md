@@ -79,11 +79,21 @@ In principle, IPython magics should work. Still, however, it would
 require to put a `%%language` tag at the beginning of each cell. This,
 however, could be fixed in IPython3.0, as different kernels could be
 selected within the [notebook user
-interface](http://ipython.org/ipython-doc/dev/whatsnew/development.html). 
+interface](http://ipython.org/ipython-doc/dev/whatsnew/development.html).
+On resources for adding new kernels take a look at [this
+description](http://ipython.org/ipython-doc/dev/development/kernels.html)
+and [these notes](https://github.com/takluyver/IRkernel) on using an R
+kernel.
 
 An alternative interface for interweaving of several software kernels
 could be the [jupyter project](http://jupyter.org/), which is also
-built on IPython.
+built on IPython. For a first step in setting this up for multiple
+kernels take a look at [these
+slides](http://heike.github.io/stat590f/ijulia/#/7), or at
+[this](https://ocefpaf.github.io/python4oceanographers/blog/2014/09/01/ipython_kernel/)
+blog post about setting up bash scripting with Jupyter.
+
+
 
 Beaker
 ======
@@ -99,8 +109,23 @@ Beaker
 docker run -p 8800:8800 -t beakernotebook/beaker
 ````
 
-R Debian
+R only
 ========
+
+Even if we do not succeed in setting up a joint environment for both R
+and Julia, hosting our pure R environment through docker already
+provides us with some advantages:
+- same R environment on multiple computers with individually updating
+  / installing packages on each
+- R environment also could be used on servers where some components
+  are lacking and can not be installed due to missing rights
+- if code of some required packages breaks, environment easily can be
+  set back to last working state
+- dependency on well hosted R core will allow to make use of superior
+  administrative knowledge of rocker maintainers
+
+R Debian
+--------
 
 Rocker images are built on Debian, so that they probably should be
 ported to Ubuntu in order to make them work with Julia, IPython and
@@ -128,7 +153,10 @@ docker build -t juliafinmetrix/rfinm_deb .
 docker run -d -p 8787:8787 juliafinmetrix/rfinm_deb rstudiostart
 ````
 
-##### run console with graphics windows
+##### run console with graphics windows 
+
+Code is largely taken from [this
+answer](http://stackoverflow.com/questions/25281992/alternatives-to-ssh-x11-forwarding-for-docker-containers).
 
 With emacs:
 - start shell in emacs
@@ -150,7 +178,11 @@ docker run --rm -it juliafinmetrix/rfinm_deb bash
 ````
 
 R Ubuntu 
-=============
+--------
+
+In the long run, R probably needs to be ported to Ubuntu in order to
+use it with beaker and Julia. Some first attempts already can be found
+in the ubuntu subdirectory.
 
 ##### build commands
 
@@ -164,8 +196,29 @@ docker build -t juliafinmetrix/rfinm_ub .
 Julia
 =====
 
-Source file editing:
+As long as source file editing is not yet solved, it is not possible
+for me to completely switch to fully docker hosted Julia environment.
+Even without support for Julia and R jointly this would already be an
+improvement due to the same reasons that also justify a pure R
+environment. 
+
+Setting up Julia itself seems to be
+[trivially](https://registry.hub.docker.com/u/dockerfile/julia/dockerfile/).
+Still, however, this does not offer little benefit, as long as there
+are no convenient interfaces implemented. For source file editing,
+there are two possible ways:
 - with emacs ess-remote: not working
+- JuliaStudio server: not yet developed
+
+For literate programming, setting up an IJulia server in docker should
+be possible, but does not add benefits as long as source file editing
+is not solved yet. 
+
+An alternative to setting up an IJulia server on your own could be to
+use an already maintained docker container through
+[JuliaBox](https://juliabox.org/).
+
+Notes:
 - directly working in terminal: 
   - using Winston throws error if X11 forwarding is not activated
 
@@ -185,6 +238,11 @@ docker
 sudo groupadd docker
 sudo gpasswd -a ${USER} docker
 ````
+
+According to [this
+answer](http://askubuntu.com/questions/477551/how-can-i-use-docker-without-sudo),
+if you are adding the current logged in user, you will need to log out
+and log back in again.
 
 ##### File ownership
 by default, files within docker are owned by root?!
