@@ -120,34 +120,35 @@ For source file editing:
 - run RStudio server
 - 
 
-### build debian image
+##### build debian image
 
 
 ````
 docker build -t jfinmetrix/rfinm_deb .
 ````
 
-### run RStudio
+##### run RStudio
 
 ````
 docker run -d -p 8787:8787 jfinmetrix/rfinm_deb rstudiostart
 ````
 
-### run console with graphics windows
+##### run console with graphics windows
 
-
+With emacs:
+- start shell in emacs
+- start container:
 ````
 docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix --name="rfinm_deb" jfinmetrix/rfinm_deb bash
 ````
-With emacs:
-- start shell in emacs
-- start container
-- start R
+or with home directory mounted:
+````
+docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix  -v ./:/home/docker/ --name="rfinm_deb" jfinmetrix/rfinm_deb bash
+````
 - M-x ess-remote
 
 
-### run terminal in image
-
+##### run terminal in image
 
 ````
 docker run --rm -it jfinmetrix/rfinm_deb bash
