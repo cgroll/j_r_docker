@@ -166,7 +166,7 @@ docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-un
 ````
 or with home directory mounted:
 ````
-docker run -it --rm -e DISPLAY=$DISPLAY -u docker -v /tmp/.X11-unix:/tmp/.X11-unix  -v ./:/home/docker/ --name="rfinm_deb" juliafinmetrix/rfinm_deb bash
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix  -v $PWD:/home/docker/ --name="rfinm_deb" juliafinmetrix/rfinm_deb bash
 ````
 - M-x ess-remote
 
