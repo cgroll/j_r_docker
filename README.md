@@ -100,10 +100,11 @@ Beaker
 
 - based on Ubuntu (opposed to Rocker images)
 - for built it requires files in github folder
-- currently doesn't built
-- also: running image from
+- currently building does work, but I can not connect to server of own
+  built image
+- but: running image from
   [hub.docker](https://registry.hub.docker.com/u/beakernotebook/beaker/)
-  currently does not work 
+  does work 
 
 ````
 docker run -p 8800:8800 -t beakernotebook/beaker
