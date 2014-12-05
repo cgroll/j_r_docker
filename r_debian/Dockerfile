@@ -10,6 +10,7 @@ RUN install2.r --error --deps TRUE \
     CDVine \
     fGarch \
     zoo \
+    sde \
     tseries && \
     rm -rf /tmp/downloaded_packages/
 
